@@ -27,6 +27,7 @@ export const Cell = ({
         backgroundColor: 'white',
         color: activeCell ? 'rgba(0,0,0,0.3)' : 'black',
         fontSize: 'calc(min(100vw / 35, 20px))',
+        cursor: index === 12 || activeCell ? 'auto' : 'pointer',
       }}
       onClick={() => onClick(index)}
     >
@@ -51,6 +52,7 @@ export const Cell = ({
           height: '100%',
           width: '100%',
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
           backgroundColor: winCell ? '#E1FEDD' : 'rgba(0,0,0, 0.03)',
@@ -61,6 +63,11 @@ export const Cell = ({
         }}
       >
         {text}
+        {index === 12 && (
+          <div style={{ fontSize: 'calc(min(100vw / 55, 12px))' }}>
+            (bonus point)
+          </div>
+        )}
       </div>
     </section>
   );

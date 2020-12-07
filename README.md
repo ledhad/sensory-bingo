@@ -12,6 +12,8 @@ Library : React
 
 Typescript and confetti-js
 
+Styles are mostly made inline. It's not perfect for clarity but it's fast to write. I could have added styled-components or something similar to make the code prettier.
+
 ## Available Scripts
 
 In the project directory, you can run:

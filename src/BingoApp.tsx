@@ -18,6 +18,30 @@ function BingoApp() {
   const [loading, setLoading] = React.useState(true);
   const [winnerCells, setWinnerCells] = React.useState<number[]>();
   const [blockGame, setBlockGame] = React.useState(false);
+  const canvasRef = React.useRef<HTMLCanvasElement>(null); // for confetti
+
+  // Init
+  React.useEffect(() => {
+    initialCells.current = [];
+    shuffleArray(content); // randomize board
+    for (let index = 0; index < content.length; index++) {
+      initialCells.current.push({
+        text: content[index],
+        id: index,
+        active: false,
+        winning: false,
+      });
+    }
+    setCells(initialCells.current);
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 100); // just for fun. Actually does not serve a purpose
+
+    return () => {
+      setLoading(true);
+    };
+  }, []);
 
   // onClick cell mark cell as active and we run the algo
   let handleClickCell = (id: number) => {
@@ -67,29 +91,6 @@ function BingoApp() {
     setCells(initialCells.current);
   };
 
-  // Init
-  React.useEffect(() => {
-    initialCells.current = [];
-    shuffleArray(content); // randomize board
-    for (let index = 0; index < content.length; index++) {
-      initialCells.current.push({
-        text: content[index],
-        id: index,
-        active: false,
-        winning: false,
-      });
-    }
-    setCells(initialCells.current);
-
-    setTimeout(() => {
-      setLoading(false);
-    }, 100); // just for fun. Actually does not serve a purpose
-
-    return () => {
-      setLoading(true);
-    };
-  }, []);
-
   // Updating UI for winner cells (turns green)
   React.useEffect(() => {
     if (winnerCells)
@@ -102,10 +103,10 @@ function BingoApp() {
       );
   }, [winnerCells]);
 
+  // Success UI support
   React.useEffect(() => {
-    const confettiSettings = { target: 'my-canvas' };
+    const confettiSettings = { target: canvasRef.current };
     const confetti = new ConfettiGenerator(confettiSettings);
-
     if (blockGame) confetti.render();
     else confetti.clear();
 
@@ -116,7 +117,7 @@ function BingoApp() {
   return (
     <div className="App">
       <canvas
-        id="my-canvas"
+        ref={canvasRef}
         style={{
           position: 'absolute',
           marginTop: 30,
