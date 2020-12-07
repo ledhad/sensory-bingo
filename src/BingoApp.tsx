@@ -66,13 +66,12 @@ function BingoApp() {
     }
     setCells(initialCells.current);
   };
-
+  const [cellsRobot, setCellsRobot] = React.useState<arrayCellType[]>([]);
+  const initialCellsRobot = React.useRef<arrayCellType[]>([]); //just
   // Init
   React.useEffect(() => {
     initialCells.current = [];
     shuffleArray(content); // randomize board
-    const contentRobot = content.map((el) => el);
-    shuffleArray(contentRobot);
     for (let index = 0; index < content.length; index++) {
       initialCells.current.push({
         text: content[index],
