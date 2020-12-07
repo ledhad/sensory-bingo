@@ -66,8 +66,7 @@ function BingoApp() {
     }
     setCells(initialCells.current);
   };
-  const [cellsRobot, setCellsRobot] = React.useState<arrayCellType[]>([]);
-  const initialCellsRobot = React.useRef<arrayCellType[]>([]); //just
+
   // Init
   React.useEffect(() => {
     initialCells.current = [];
