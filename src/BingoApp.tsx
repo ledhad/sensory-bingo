@@ -8,6 +8,7 @@ import { bingoAlgo } from './utils';
 import Button from './components/Button';
 import shuffleArray from './utils/shuffleArray';
 import ConfettiGenerator from 'confetti-js';
+import { ReactComponent as LinkedinLogo } from './assets/linkedin.svg';
 
 function BingoApp() {
   //al the state is in this component
@@ -147,7 +148,6 @@ function BingoApp() {
           {partyEmoji}
         </span>
       )}
-
       {loading ? (
         <>Loading ...</>
       ) : (
@@ -169,6 +169,23 @@ function BingoApp() {
           </Grid>
         </>
       )}
+      <h3
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          width: 250,
+          justifyContent: 'space-evenly',
+        }}
+      >
+        Link to project files &nbsp; =&gt; &nbsp;
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://github.com/ledhad/sensory-bingo"
+        >
+          <LinkedinLogo />
+        </a>
+      </h3>
     </div>
   );
 }

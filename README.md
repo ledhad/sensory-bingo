@@ -1,3 +1,11 @@
+## About this project
+
+Resolution of code challenge : https://www.notion.so/Code-Challenge-350db0fc3cb74cfbab15dbc096dfe7de
+
+Company : Sensory-Mind
+
+Candidate : Ledanseur Hadrien
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
