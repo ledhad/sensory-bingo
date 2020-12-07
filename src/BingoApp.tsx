@@ -191,3 +191,5 @@ function BingoApp() {
 }
 
 export default BingoApp;
+
+// Idea of functionality to add : play with others! I started to do it against a robot but realized it would require quite a lot of rework. But that's a fun idea, I think.
