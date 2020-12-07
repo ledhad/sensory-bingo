@@ -129,7 +129,7 @@ function BingoApp() {
           pointerEvents: 'none',
         }}
       />
-      <WinningEmoji blockGame={blockGame} />
+      {blockGame && <WinningEmoji />}
       {loading ? (
         <>Loading ...</>
       ) : (
