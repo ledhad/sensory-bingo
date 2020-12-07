@@ -8,7 +8,8 @@ import { bingoAlgo } from './utils';
 import Button from './components/Button';
 import shuffleArray from './utils/shuffleArray';
 import ConfettiGenerator from 'confetti-js';
-import { ReactComponent as LinkedinLogo } from './assets/linkedin.svg';
+import WinningEmoji from './components/WinningEmoji';
+import LinkCode from './components/LinkCode';
 
 function BingoApp() {
   //al the state is in this component
@@ -17,10 +18,6 @@ function BingoApp() {
   const [loading, setLoading] = React.useState(true);
   const [winnerCells, setWinnerCells] = React.useState<number[]>();
   const [blockGame, setBlockGame] = React.useState(false);
-
-  // optional match up
-
-  const partyEmoji = '🥳';
 
   // onClick cell mark cell as active and we run the algo
   let handleClickCell = (id: number) => {
@@ -117,6 +114,7 @@ function BingoApp() {
     return () => confetti.clear();
   }, [blockGame]); // add the var dependencies or not
 
+  // JSX for the UI
   return (
     <div className="App">
       <canvas
@@ -126,28 +124,12 @@ function BingoApp() {
           marginTop: 30,
           zIndex: 20,
           maxHeight: 700,
-          height: 'calc(100vw)',
+          height: '100vw',
           width: '100%',
           pointerEvents: 'none',
         }}
-      ></canvas>
-      {blockGame && (
-        <span
-          style={{
-            position: 'absolute',
-            top: 'min(25vw, 300px)',
-            left: 0,
-            display: 'flex',
-            justifyContent: 'center',
-            height: '100%',
-            width: '100%',
-            fontSize: 150,
-            zIndex: 21,
-          }}
-        >
-          {partyEmoji}
-        </span>
-      )}
+      />
+      <WinningEmoji blockGame={blockGame} />
       {loading ? (
         <>Loading ...</>
       ) : (
@@ -169,23 +151,8 @@ function BingoApp() {
           </Grid>
         </>
       )}
-      <h3
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          width: 250,
-          justifyContent: 'space-evenly',
-        }}
-      >
-        Link to project files &nbsp; =&gt; &nbsp;
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://github.com/ledhad/sensory-bingo"
-        >
-          <LinkedinLogo />
-        </a>
-      </h3>
+      {/* Link to the code on github */}
+      <LinkCode />
     </div>
   );
 }

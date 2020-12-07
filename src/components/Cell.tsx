@@ -14,6 +14,7 @@ export const Cell = ({
   activeCell = false,
 }: Props) => {
   return (
+    // Container
     <section
       style={{
         height: '100%',
@@ -29,6 +30,7 @@ export const Cell = ({
       }}
       onClick={() => onClick(index)}
     >
+      {/* index of cell */}
       <span
         style={{
           position: 'absolute',
@@ -43,6 +45,7 @@ export const Cell = ({
       >
         {index}
       </span>
+      {/* text of cell */}
       <div
         style={{
           height: '100%',
