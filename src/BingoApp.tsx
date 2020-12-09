@@ -9,8 +9,7 @@ import WinningEmoji from './components/WinningEmoji';
 import LinkCode from './components/LinkCode';
 
 function BingoApp() {
-  //al the state is in this component
-
+  // All the state is in this component
   const [loading, setLoading] = React.useState(true);
   const [winnerCells, setWinnerCells] = React.useState<number[]>();
   const [blockGame, setBlockGame] = React.useState(false);
