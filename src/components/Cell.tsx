@@ -1,12 +1,14 @@
 interface Props {
   text: string;
   index: number;
+  position: number;
   winCell: boolean;
   onClick: (id: number) => void;
   activeCell: boolean;
 }
 
 export const Cell = ({
+  position,
   text,
   index,
   onClick,
@@ -29,7 +31,7 @@ export const Cell = ({
         fontSize: 'calc(min(100vw / 35, 20px))',
         cursor: index === 12 || activeCell ? 'auto' : 'pointer',
       }}
-      onClick={() => onClick(index)}
+      onClick={() => onClick(position)}
     >
       {/* index of cell */}
       <span

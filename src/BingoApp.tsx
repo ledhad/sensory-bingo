@@ -2,70 +2,71 @@ import * as React from 'react';
 import './App.css';
 import { Grid } from './components';
 import { Cell } from './components';
-import { content } from './content';
-import { arrayCellType } from './components';
-import { bingoAlgo } from './utils';
+import { bingoAlgo, newBoard, arrayCellType, useCreateBoard } from './utils';
 import Button from './components/Button';
-import shuffleArray from './utils/shuffleArray';
 import ConfettiGenerator from 'confetti-js';
 import WinningEmoji from './components/WinningEmoji';
 import LinkCode from './components/LinkCode';
 
 function BingoApp() {
   //al the state is in this component
-  const [cells, setCells] = React.useState<arrayCellType[]>([]);
-  const initialCells = React.useRef<arrayCellType[]>([]); //just for init, ref does not trigger a render
+
   const [loading, setLoading] = React.useState(true);
   const [winnerCells, setWinnerCells] = React.useState<number[]>();
   const [blockGame, setBlockGame] = React.useState(false);
   const canvasRef = React.useRef<HTMLCanvasElement>(null); // for confetti
 
+  const { a: initialCells, b: cellsVirtual } = useCreateBoard(); // two sets of INITIAL cells
+
+  const [cells, setCells] = React.useState<arrayCellType[]>([]); // UI cells stored in useState (for re-rendering)
+  const virtualCells = React.useRef<arrayCellType[]>([]); // computation cells stored in useRef (no re-render)
+
   // Init
   React.useEffect(() => {
-    initialCells.current = [];
-    shuffleArray(content); // randomize board
-    for (let index = 0; index < content.length; index++) {
-      initialCells.current.push({
-        text: content[index],
-        id: index,
-        active: false,
-        winning: false,
-      });
-    }
     setCells(initialCells.current);
+    virtualCells.current = cellsVirtual.current;
 
+    // just for fun. Actually does not serve a purpose
     setTimeout(() => {
       setLoading(false);
-    }, 100); // just for fun. Actually does not serve a purpose
+    }, 100);
 
     return () => {
       setLoading(true);
     };
-  }, []);
+  }, [initialCells, cellsVirtual]);
 
   // onClick cell mark cell as active and we run the algo
-  let handleClickCell = (id: number) => {
-    let cellAlreadyClicked = cells[id].active; // to avoid useless computation
-    let middleId = (-1 + cells.length) / 2; // 12
-    let middleCellClicked = id === middleId;
+  let handleClickCell = (position: number) => {
+    // console.log('clicked on cell : ', position);
+    let cellID = cells[position].id;
 
-    const tempCells = JSON.parse(JSON.stringify(cells)); //for algo and avoiding shallow copy. Works because our data is simple (e.g. no functions)
-
-    tempCells[middleId].active = true; // This one is bonus
+    // to avoid useless computation
+    let cellAlreadyClicked = cells[position].active;
+    // 12 middle cell
+    let middleCellClicked = cellID === (-1 + cells.length) / 2;
 
     if (!cellAlreadyClicked && !blockGame) {
       // Updating cell to active status
       if (!middleCellClicked) {
         setCells((c) =>
-          c.map((cell) => (cell.id === id ? { ...cell, active: true } : cell))
+          c.map((cell) =>
+            cell.id === cellID ? { ...cell, active: true } : cell
+          )
         );
-        tempCells[id].active = true;
+        // And also computation cells
+        virtualCells.current[position].active = true;
       }
 
       // Run algo
-      let res = bingoAlgo(tempCells, id);
+      let res = bingoAlgo(virtualCells.current, position);
       if (res.conditionWin) {
-        setWinnerCells(res.winnerIndexes); // taken care of in useEffect
+        // We receive the position value of the winners, not their actual id.
+        let winCellsNotVirtual = res.winnerIndexes.map((id) => cells[id].id);
+
+        // UI update taken care of in useEffect
+        setWinnerCells(winCellsNotVirtual);
+
         // And block boardgame
         setBlockGame(true);
       }
@@ -74,21 +75,8 @@ function BingoApp() {
 
   // Handle new game
   const handleClickButton = () => {
-    setCells(initialCells.current);
+    newBoard(virtualCells, setCells);
     setBlockGame(false);
-
-    //And making new board
-    initialCells.current = [];
-    shuffleArray(content);
-    for (let index = 0; index < content.length; index++) {
-      initialCells.current.push({
-        text: content[index],
-        id: index,
-        active: false,
-        winning: false,
-      });
-    }
-    setCells(initialCells.current);
   };
 
   // Updating UI for winner cells (turns green)
@@ -133,13 +121,16 @@ function BingoApp() {
         <>Loading ...</>
       ) : (
         <>
-          <Button onClick={handleClickButton}>Restart Game</Button>
+          <Button onClick={handleClickButton}>
+            {!blockGame ? 'Start' : 'New'} Game
+          </Button>
           <Grid>
             {cells.map((cell, idx) => {
               return (
                 <Cell
                   text={cell.text}
                   index={cell.id}
+                  position={idx}
                   winCell={cell.winning}
                   key={idx}
                   onClick={handleClickCell}
